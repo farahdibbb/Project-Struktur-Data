@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buku Telefon</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --accent: #4fffb0;
+    --accent2: #00c8ff;
+    --text: #e8edf5;
+    --muted: #7a8599;
+    --danger: #ff5f7e;
+    --border: #2a3347;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    background-image: radial-gradient(ellipse at 20% 10%, #1a2f4422 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 80%, #0d3a2d22 0%, transparent 50%);
+  }
+
+  .app {
+    width: 100%;
+    max-width: 820px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-left h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-left p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+
+  .stat-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Nav Menu */
+  .nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.active {
+    background: linear-gradient(135deg, #1a4a3a, #0d3340);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Search Bar */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  /* Panel */
+  .panel {
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+  .panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Form */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .form-card h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface2); }
+
+  .form-actions { display: flex; gap: 10px; margin-top: 4px; }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #0e1117;
+  }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-secondary:hover { border-color: var(--muted); color: var(--text); }
+
+  /* Contact List */
+  .alphabet-section { margin-bottom: 20px; }
+
+  .alpha-label {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+    padding: 4px 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contact-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .contact-card:hover {
+    border-color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    color: #0e1117;
+    font-weight: 700;
+  }
+
+  .contact-info { flex: 1; min-width: 0; }
+  .contact-name { font-weight: 600; font-size: 0.95rem; }
+  .contact-phone { color: var(--muted); font-size: 0.82rem; margin-top: 2px; }
+  .contact-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .tag-keluarga { background: #1a3a4a; color: var(--accent2); }
+  .tag-rakan { background: #1a3a2a; color: var(--accent); }
+  .tag-kerja { background: #3a2a1a; color: #ffb347; }
+  .tag-lain { background: #2a1a3a; color: #c084fc; }
+
+  .contact-actions { display: flex; gap: 6px; }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .icon-btn.del:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* Empty State */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty .big-icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty p { font-size: 0.9rem; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 100;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    width: 100%;
+    max-width: 480px;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+  }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-card .num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-card .lbl { color: var(--muted); font-size: 0.82rem; margin-top: 4px; }
+
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    line-height: 1.8;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .about-card h3 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--text);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-left">
+      <h1>📖 Buku Telefon</h1>
+      <p>Urus kenalan anda dengan mudah</p>
+    </div>
+    <div class="stat-badge" id="totalBadge">0 kenalan</div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav">
+    <button class="nav-btn active" onclick="showPanel('senarai', this)">📋 Senarai</button>
+    <button class="nav-btn" onclick="showPanel('tambah', this)">➕ Tambah</button>
+    <button class="nav-btn" onclick="showPanel('statistik', this)">📊 Statistik</button>
+    <button class="nav-btn" onclick="showPanel('tentang', this)">ℹ️ Tentang</button>
+  </div>
+
+  <!-- Panel: Senarai -->
+  <div class="panel active" id="panel-senarai">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Cari nama, telefon, atau kategori..." oninput="renderList()">
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setFilter('semua', this)">Semua</button>
+      <button class="filter-btn" onclick="setFilter('keluarga', this)">Keluarga</button>
+      <button class="filter-btn" onclick="setFilter('rakan', this)">Rakan</button>
+      <button class="filter-btn" onclick="setFilter('kerja', this)">Kerja</button>
+      <button class="filter-btn" onclick="setFilter('lain', this)">Lain-lain</button>
+    </div>
+    <div id="contactList"></div>
+  </div>
+
+  <!-- Panel: Tambah -->
+  <div class="panel" id="panel-tambah">
+    <div class="form-card">
+      <h2 id="formTitle">➕ Tambah Kenalan Baru</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nama Penuh</label>
+          <input type="text" id="fNama" placeholder="Contoh: Ahmad bin Ali">
+        </div>
+        <div class="form-group">
+          <label>No. Telefon</label>
+          <input type="text" id="fTelefon" placeholder="Contoh: 012-3456789">
+        </div>
+        <div class="form-group">
+          <label>E-mel (pilihan)</label>
+          <input type="email" id="fEmail" placeholder="Contoh: ahmad@email.com">
+        </div>
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="fKategori">
+            <option value="keluarga">Keluarga</option>
+            <option value="rakan">Rakan</option>
+            <option value="kerja">Kerja</option>
+            <option value="lain">Lain-lain</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Alamat (pilihan)</label>
+        <input type="text" id="fAlamat" placeholder="Contoh: No 5, Jalan Merdeka, Kuala Lumpur">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="simpanKenalan()">💾 Simpan</button>
+        <button class="btn btn-secondary" onclick="resetForm()">🔄 Set Semula</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Statistik -->
+  <div class="panel" id="panel-statistik">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="num" id="statTotal">0</div><div class="lbl">Jumlah Kenalan</div></div>
+      <div class="stat-card"><div class="num" id="statKeluarga">0</div><div class="lbl">Keluarga</div></div>
+      <div class="stat-card"><div class="num" id="statRakan">0</div><div class="lbl">Rakan</div></div>
+      <div class="stat-card"><div class="num" id="statKerja">0</div><div class="lbl">Kerja</div></div>
+      <div class="stat-card"><div class="num" id="statLain">0</div><div class="lbl">Lain-lain</div></div>
+    </div>
+  </div>
+
+  <!-- Panel: Tentang -->
+  <div class="panel" id="panel-tentang">
+    <div class="about-card">
+      <h3>📖 Buku Telefon Digital</h3>
+      <p>Aplikasi simulasi buku telefon digital yang membolehkan anda:</p>
+      <ul style="margin: 12px 0 12px 20px; line-height:2;">
+        <li>Menambah kenalan baru dengan maklumat lengkap</li>
+        <li>Mencari kenalan mengikut nama, telefon, atau kategori</li>
+        <li>Mengedit maklumat kenalan sedia ada</li>
+        <li>Memadamkan kenalan yang tidak diperlukan</li>
+        <li>Menapis kenalan mengikut kumpulan</li>
+        <li>Melihat statistik kenalan anda</li>
+      </ul>
+      <p>Kenalan disusun mengikut abjad secara automatik untuk kemudahan pencarian.</p>
+      <br>
+      <p style="color: var(--accent); font-size:0.85rem;">Versi 1.0 · Dibina dengan ❤️</p>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>✏️ Edit Kenalan</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nama Penuh</label>
+        <input type="text" id="eNama" placeholder="Nama">
+      </div>
+      <div class="form-group">
+        <label>No. Telefon</label>
+        <input type="text" id="eTelefon" placeholder="No. Telefon">
+      </div>
+      <div class="form-group">
+        <label>E-mel</label>
+        <input type="email" id="eEmail" placeholder="E-mel">
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="eKategori">
+          <option value="keluarga">Keluarga</option>
+          <option value="rakan">Rakan</option>
+          <option value="kerja">Kerja</option>
+          <option value="lain">Lain-lain</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label>Alamat</label>
+      <input type="text" id="eAlamat" placeholder="Alamat">
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="kemaskiniKenalan()">💾 Kemaskini</button>
+      <button class="btn btn-secondary" onclick="tutupModal()">✕ Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="delModal">
+  <div class="modal">
+    <h3>🗑️ Padam Kenalan</h3>
+    <p style="color:var(--muted); margin-bottom:20px; font-size:0.9rem;">Adakah anda pasti mahu memadam kenalan ini? Tindakan ini tidak boleh dibatalkan.</p>
+    <div class="form-actions">
+      <button class="btn btn-primary" style="background: linear-gradient(135deg, var(--danger), #c0392b); color:#fff" onclick="sahPadam()">🗑️ Ya, Padam</button>
+      <button class="btn btn-secondary" onclick="tutupDelModal()">✕ Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let kenalan = [
+    { id: 1, nama: 'Ahmad bin Ali', telefon: '012-3456789', email: 'ahmad@mail.com', kategori: 'keluarga', alamat: 'Kuala Lumpur' },
+    { id: 2, nama: 'Siti Rahimah', telefon: '011-2345678', email: 'siti@mail.com', kategori: 'rakan', alamat: 'Petaling Jaya' },
+    { id: 3, nama: 'Mohd Faizal', telefon: '019-8765432', email: '', kategori: 'kerja', alamat: 'Shah Alam' },
+    { id: 4, nama: 'Nurul Aisyah', telefon: '017-5432109', email: 'nurul@mail.com', kategori: 'keluarga', alamat: 'Ipoh' },
+    { id: 5, nama: 'Raj Kumar', telefon: '016-1234567', email: 'raj@mail.com', kategori: 'rakan', alamat: 'Penang' },
+    { id: 6, nama: 'Tan Mei Ling', telefon: '013-9876543', email: '', kategori: 'kerja', alamat: 'Johor Bahru' },
+  ];
+
+  let nextId = 10;
+  let activeFilter = 'semua';
+  let editId = null;
+  let deleteId = null;
+
+  const avatarColors = ['#4fffb0','#00c8ff','#ffb347','#ff5f7e','#c084fc','#38bdf8'];
+
+  function getColor(nama) {
+    let h = 0;
+    for(let c of nama) h += c.charCodeAt(0);
+    return avatarColors[h % avatarColors.length];
+  }
+
+  function setFilter(f, btn) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderList();
+  }
+
+  function renderList() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let filtered = kenalan.filter(k => {
+      const matchSearch = k.nama.toLowerCase().includes(q) || k.telefon.includes(q) || k.kategori.includes(q);
+      const matchFilter = activeFilter === 'semua' || k.kategori === activeFilter;
+      return matchSearch && matchFilter;
+    });
+
+    filtered.sort((a,b) => a.nama.localeCompare(b.nama, 'ms'));
+
+    const container = document.getElementById('contactList');
+    if (!filtered.length) {
+      container.innerHTML = `<div class="empty"><div class="big-icon">🔍</div><p>Tiada kenalan ditemui.</p></div>`;
+      return;
+    }
+
+    // Group by first letter
+    const groups = {};
+    filtered.forEach(k => {
+      const l = k.nama[0].toUpperCase();
+      if (!groups[l]) groups[l] = [];
+      groups[l].push(k);
+    });
+
+    container.innerHTML = Object.keys(groups).sort().map(letter => `
+      <div class="alphabet-section">
+        <div class="alpha-label">${letter}</div>
+        ${groups[letter].map(k => cardHTML(k)).join('')}
+      </div>
+    `).join('');
+
+    updateStats();
+  }
+
+  function cardHTML(k) {
+    const initial = k.nama[0].toUpperCase();
+    const color = getColor(k.nama);
+    const tagClass = `tag-${k.kategori}`;
+    const tagLabel = {keluarga:'Keluarga',rakan:'Rakan',kerja:'Kerja',lain:'Lain-lain'}[k.kategori];
+    return `
+      <div class="contact-card">
+        <div class="avatar" style="background:${color}">${initial}</div>
+        <div class="contact-info">
+          <div class="contact-name">${k.nama}</div>
+          <div class="contact-phone">📞 ${k.telefon}${k.email ? ' · 📧 ' + k.email : ''}</div>
+          <span class="contact-tag ${tagClass}">${tagLabel}</span>
+        </div>
+        <div class="contact-actions">
+          <button class="icon-btn" title="Edit" onclick="bukaEdit(${k.id})">✏️</button>
+          <button class="icon-btn del" title="Padam" onclick="bukaPadam(${k.id})">🗑️</button>
+        </div>
+      </div>`;
+  }
+
+  function showPanel(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+    if (name === 'statistik') updateStats();
+  }
+
+  function simpanKenalan() {
+    const nama = document.getElementById('fNama').value.trim();
+    const telefon = document.getElementById('fTelefon').value.trim();
+    if (!nama || !telefon) { toast('⚠️ Nama dan telefon wajib diisi!'); return; }
+    kenalan.push({
+      id: nextId++,
+      nama,
+      telefon,
+      email: document.getElementById('fEmail').value.trim(),
+      kategori: document.getElementById('fKategori').value,
+      alamat: document.getElementById('fAlamat').value.trim(),
+    });
+    resetForm();
+    renderList();
+    updateBadge();
+    toast('✅ Kenalan berjaya ditambah!');
+    showPanel('senarai', document.querySelector('.nav-btn'));
+  }
+
+  function resetForm() {
+    ['fNama','fTelefon','fEmail','fAlamat'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fKategori').value = 'keluarga';
+    editId = null;
+  }
+
+  function bukaEdit(id) {
+    const k = kenalan.find(x => x.id === id);
+    if (!k) return;
+    editId = id;
+    document.getElementById('eNama').value = k.nama;
+    document.getElementById('eTelefon').value = k.telefon;
+    document.getElementById('eEmail').value = k.email;
+    document.getElementById('eKategori').value = k.kategori;
+    document.getElementById('eAlamat').value = k.alamat;
+    document.getElementById('editModal').classList.add('open');
+  }
+
+  function kemaskiniKenalan() {
+    const k = kenalan.find(x => x.id === editId);
+    if (!k) return;
+    const nama = document.getElementById('eNama').value.trim();
+    const telefon = document.getElementById('eTelefon').value.trim();
+    if (!nama || !telefon) { toast('⚠️ Nama dan telefon wajib diisi!'); return; }
+    k.nama = nama; k.telefon = telefon;
+    k.email = document.getElementById('eEmail').value.trim();
+    k.kategori = document.getElementById('eKategori').value;
+    k.alamat = document.getElementById('eAlamat').value.trim();
+    tutupModal();
+    renderList();
+    toast('✅ Kenalan berjaya dikemaskini!');
+  }
+
+  function tutupModal() { document.getElementById('editModal').classList.remove('open'); }
+
+  function bukaPadam(id) {
+    deleteId = id;
+    document.getElementById('delModal').classList.add('open');
+  }
+
+  function sahPadam() {
+    kenalan = kenalan.filter(k => k.id !== deleteId);
+    tutupDelModal();
+    renderList();
+    updateBadge();
+    toast('🗑️ Kenalan berjaya dipadam!');
+  }
+
+  function tutupDelModal() { document.getElementById('delModal').classList.remove('open'); }
+
+  function updateStats() {
+    document.getElementById('statTotal').textContent = kenalan.length;
+    document.getElementById('statKeluarga').textContent = kenalan.filter(k=>k.kategori==='keluarga').length;
+    document.getElementById('statRakan').textContent = kenalan.filter(k=>k.kategori==='rakan').length;
+    document.getElementById('statKerja').textContent = kenalan.filter(k=>k.kategori==='kerja').length;
+    document.getElementById('statLain').textContent = kenalan.filter(k=>k.kategori==='lain').length;
+    updateBadge();
+  }
+
+  function updateBadge() {
+    document.getElementById('totalBadge').textContent = kenalan.length + ' kenalan';
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // Init
+  renderList();
+  updateBadge();
+</script>
+</body>
+</html>
